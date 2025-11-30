@@ -4,8 +4,8 @@ class Starfield {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.stars = [];
-    this.depth = 256;
-    this.speed = 2;
+    this.depth = 512; // more depth for smoother parallax
+    this.speed = 0.7; // slower base speed for calmer effect
     
     this.resizeCanvas();
     this.initStars();
@@ -21,12 +21,15 @@ class Starfield {
   
   initStars() {
     this.stars = [];
-    for (let i = 0; i < 200; i++) {
+    // Fewer stars and slower baseline speed for calmer effect
+    for (let i = 0; i < 120; i++) {
+      // vz is per-star velocity; scaled so nearer stars move faster
+      const base = this.speed * (0.6 + Math.random() * 0.8);
       this.stars.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
         z: Math.random() * this.depth,
-        vz: this.speed + Math.random() * 2
+        vz: base
       });
     }
   }
@@ -61,8 +64,8 @@ class Starfield {
   }
   
   animate() {
-    // Clear with semi-transparent overlay for trail effect
-    this.ctx.fillStyle = 'rgba(7, 7, 10, 0.05)';
+    // Clear with a subtle overlay for mild trails (low alpha keeps motion smooth)
+    this.ctx.fillStyle = 'rgba(7, 7, 10, 0.12)';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     
     // Update and draw stars
